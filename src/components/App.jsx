@@ -6,28 +6,32 @@ import ContactList from './ContactList';
 import Filter from './Filter';
 
 export function App() {
-  const [contacts, setContacts] = useState([
-    {
-      id: '1',
-      name: 'Harry Potter',
-      number: '459-12-56',
-    },
-    {
-      id: '2',
-      name: 'Hermione Granger',
-      number: '443-89-12',
-    },
-    {
-      id: '3',
-      name: 'Ronald Weasley',
-      number: '645-17-79',
-    },
-    {
-      id: '4',
-      name: 'Luna Lovegood',
-      number: '227-91-26',
-    },
-  ]);
+  const [contacts, setContacts] = useState(() => {
+    return (
+      JSON.parse(window.localStorage.getItem('contacts')) ?? [
+        {
+          id: '1',
+          name: 'Harry Potter',
+          number: '459-12-56',
+        },
+        {
+          id: '2',
+          name: 'Hermione Granger',
+          number: '443-89-12',
+        },
+        {
+          id: '3',
+          name: 'Ronald Weasley',
+          number: '645-17-79',
+        },
+        {
+          id: '4',
+          name: 'Luna Lovegood',
+          number: '227-91-26',
+        },
+      ]
+    );
+  });
   const [filter, setFilter] = useState('');
 
   const checkName = name => {
@@ -46,12 +50,12 @@ export function App() {
         number,
       };
 
-      setContacts(state => contact + state);
+      setContacts(state => [contact, ...state]);
     }
   };
 
   const changeFilter = e => {
-    setFilter({ filter: e.currentTarget.value });
+    setFilter(e.currentTarget.value);
   };
 
   const getVisibleContacts = () => {
@@ -63,14 +67,12 @@ export function App() {
   };
 
   const deleteContact = contactId => {
-    setContacts(prevState =>
-      prevState.filter(contact => contact.id !== contactId)
-    );
+    setContacts(contacts.filter(contact => contact.id !== contactId));
   };
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts])
+  }, [contacts]);
 
   return (
     <div className={css.container}>
@@ -82,7 +84,7 @@ export function App() {
         <h2 className={css.titleContacts}>Contacts</h2>
         <Filter value={filter} onChange={changeFilter} />
         <ContactList
-          contacts={getVisibleContacts}
+          contacts={getVisibleContacts()}
           onDeleteContact={deleteContact}
         />
       </div>
