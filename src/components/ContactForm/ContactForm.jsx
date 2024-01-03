@@ -25,12 +25,7 @@ function ContactForm(onSubmit) {
   const handleSubmit = e => {
     e.preventDefault();
     const { name, number } = formData;
-
     onSubmit(name, number);
-    reset();
-  };
-
-  const reset = () => {
     setFormData({ name: '', number: '' });
   };
 
