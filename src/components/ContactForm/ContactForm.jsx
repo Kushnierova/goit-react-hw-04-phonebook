@@ -3,10 +3,7 @@ import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
 import css from './ContactForm.module.css';
 
-function ContactForm(onSubmit) {
-  // const [name, setName] = useState('');
-  // const [number, setNumber] = useState('');
-
+function ContactForm({onSubmit}) {
   const [formData, setFormData] = useState({
     name: '',
     number: '',
@@ -16,16 +13,21 @@ function ContactForm(onSubmit) {
   const numberInputId = nanoid();
 
   const handleChange = e => {
-    const { name, value } = e.currentTarget;
-    setFormData({
+    const { name, value } = e.target;
+    setFormData((state) => ({
+      ...state,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = e => {
-    e.preventDefault();
     const { name, number } = formData;
-    onSubmit(name, number);
+    e.preventDefault();
+    onSubmit(name,number);
+    reset();
+  };
+
+  const reset = () => {
     setFormData({ name: '', number: '' });
   };
 
